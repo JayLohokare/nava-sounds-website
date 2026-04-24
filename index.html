@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nava — Concerts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue-primary: #1a3a6b;
+            --blue-light: #4a7bc7;
+            --blue-glow: #6ba3e8;
+            --gold: #c9a96e;
+            --gold-light: #e8d5a8;
+            --bg-dark: #0a0a0f;
+            --bg-subtle: #111118;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Subtle gradient overlay */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse 80% 60% at 50% 50%, rgba(26, 58, 107, 0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 30% 60%, rgba(201, 169, 110, 0.04) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        /* Floating particles */
+        .particles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(201, 169, 110, 0.15);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .nava-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        /* Decorative line above */
+        .nava-container::before {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 0 auto 2rem;
+            opacity: 0.6;
+        }
+
+        /* Decorative line below */
+        .nava-container::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 2rem auto 0;
+            opacity: 0.6;
+        }
+
+        .nava-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: clamp(3.5rem, 10vw, 8rem);
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--blue-primary);
+            position: relative;
+            cursor: default;
+            user-select: none;
+            line-height: 1.1;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            text-shadow: 
+                0 0 40px rgba(26, 58, 107, 0.0),
+                0 0 80px rgba(26, 58, 107, 0.0);
+        }
+
+        .nava-text:hover {
+            color: var(--blue-light);
+            letter-spacing: 0.45em;
+            text-shadow:
+                0 0 20px rgba(74, 123, 199, 0.4),
+                0 0 60px rgba(74, 123, 199, 0.2),
+                0 0 120px rgba(74, 123, 199, 0.1);
+            transform: scale(1.02);
+        }
+
+        /* Shimmer sweep effect on hover */
+        .nava-text::after {
+            content: 'Nava Concerts';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                105deg,
+                transparent 0%,
+                transparent 35%,
+                rgba(201, 169, 110, 0.3) 45%,
+                rgba(232, 213, 168, 0.5) 50%,
+                rgba(201, 169, 110, 0.3) 55%,
+                transparent 65%,
+                transparent 100%
+            );
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .nava-text:hover::after {
+            opacity: 1;
+            animation: shimmer 1.5s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% center; }
+            100% { background-position: -200% center; }
+        }
+
+        .subtitle {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: var(--gold);
+            opacity: 0.5;
+            margin-top: 1.5rem;
+            transition: opacity 0.6s ease, letter-spacing 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .nava-container:hover .subtitle {
+            opacity: 0.8;
+            letter-spacing: 0.7em;
+        }
+
+        /* Corner accents */
+        .corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            opacity: 0.15;
+            transition: opacity 0.6s ease;
+        }
+
+        body:hover .corner {
+            opacity: 0.3;
+        }
+
+        .corner--tl {
+            top: 2rem;
+            left: 2rem;
+            border-top: 1px solid var(--gold);
+            border-left: 1px solid var(--gold);
+        }
+
+        .corner--tr {
+            top: 2rem;
+            right: 2rem;
+            border-top: 1px solid var(--gold);
+            border-right: 1px solid var(--gold);
+        }
+
+        .corner--bl {
+            bottom: 2rem;
+            left: 2rem;
+            border-bottom: 1px solid var(--gold);
+            border-left: 1px solid var(--gold);
+        }
+
+        .corner--br {
+            bottom: 2rem;
+            right: 2rem;
+            border-bottom: 1px solid var(--gold);
+            border-right: 1px solid var(--gold);
+        }
+
+        /* Thin vignette */
+        .vignette {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(ellipse 70% 70% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <div class="vignette"></div>
+
+    <div class="corner corner--tl"></div>
+    <div class="corner corner--tr"></div>
+    <div class="corner corner--bl"></div>
+    <div class="corner corner--br"></div>
+
+    <div class="nava-container">
+        <h1 class="nava-text">Nava Concerts</h1>
+        <p class="subtitle">By Invitation Only</p>
+    </div>
+
+    <script>
+        // Generate floating particles
+        const container = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (8 + Math.random() * 15) + 's';
+            particle.style.animationDelay = (Math.random() * 10) + 's';
+            particle.style.width = (1 + Math.random() * 2) + 'px';
+            particle.style.height = particle.style.width;
+            container.appendChild(particle);
+        }
+    </script>
+</body>
+</html>
