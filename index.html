@@ -85,47 +85,113 @@
             margin: 1.8rem auto 0;
         }
 
-        .nav {
+        /* Hamburger Menu */
+        .menu-toggle {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 1000;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .hamburger {
+            display: block;
+            width: 28px;
+            height: 2px;
+            background: var(--gold);
+            position: relative;
+            transition: background 0.3s ease;
+        }
+
+        .hamburger::before,
+        .hamburger::after {
+            content: '';
+            position: absolute;
+            width: 28px;
+            height: 2px;
+            background: var(--gold);
+            left: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger::before {
+            top: -8px;
+        }
+
+        .hamburger::after {
+            top: 8px;
+        }
+
+        .menu-toggle.active .hamburger {
+            background: transparent;
+        }
+
+        .menu-toggle.active .hamburger::before {
+            transform: rotate(45deg);
+            top: 0;
+        }
+
+        .menu-toggle.active .hamburger::after {
+            transform: rotate(-45deg);
+            top: 0;
+        }
+
+        /* Menu Panel */
+        .menu-panel {
             position: fixed;
             top: 0;
             left: 0;
-            padding: 1.5rem 2rem;
-            z-index: 100;
+            height: 100vh;
+            width: 280px;
+            background: rgba(10, 10, 10, 0.98);
+            border-right: 1px solid var(--gold-dim);
+            padding: 5rem 2rem 3rem;
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .nav ul {
+        .menu-panel.active {
+            transform: translateX(0);
+        }
+
+        .menu-panel ul {
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 0.8rem;
+            gap: 1.2rem;
         }
 
-        .nav a {
+        .menu-panel a {
             font-family: 'Cormorant Garamond', serif;
             font-weight: 300;
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--gold);
             text-decoration: none;
             opacity: 0.6;
-            transition: opacity 0.4s ease, letter-spacing 0.4s ease;
+            transition: opacity 0.3s ease, letter-spacing 0.3s ease;
         }
 
-        .nav a:hover {
+        .menu-panel a:hover {
             opacity: 1;
             letter-spacing: 0.2em;
         }
 
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            padding: 1.5rem 2rem;
-            z-index: 100;
+        .menu-footer {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gold-dim);
         }
 
-        .footer span {
+        .menu-footer span {
             font-family: 'Cormorant Garamond', serif;
             font-weight: 300;
             font-size: 0.75rem;
@@ -133,6 +199,25 @@
             text-transform: uppercase;
             color: var(--gold);
             opacity: 0.4;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 998;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
         }
     </style>
 </head>
@@ -144,15 +229,31 @@
         <span class="line line--bottom"></span>
     </div>
 
-    <nav class="nav">
+    <!-- Hamburger Toggle -->
+    <button class="menu-toggle" onclick="toggleMenu()">
+        <span class="hamburger"></span>
+    </button>
+
+    <!-- Menu Panel -->
+    <nav class="menu-panel">
         <ul>
-            <li><a href="#events">Events</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#events" onclick="toggleMenu()">Events</a></li>
+            <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
         </ul>
+        <div class="menu-footer">
+            <span>Nava Sounds LLC</span>
+        </div>
     </nav>
 
-    <div class="footer">
-        <span>Nava Sounds LLC</span>
-    </div>
+    <!-- Overlay -->
+    <div class="overlay" onclick="toggleMenu()"></div>
+
+    <script>
+        function toggleMenu() {
+            document.querySelector('.menu-toggle').classList.toggle('active');
+            document.querySelector('.menu-panel').classList.toggle('active');
+            document.querySelector('.overlay').classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
