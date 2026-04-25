@@ -40,6 +40,20 @@
             padding: 2rem;
         }
 
+        .logo {
+            width: clamp(80px, 15vw, 180px);
+            height: auto;
+            margin: 0 auto 1.5rem;
+            display: block;
+            filter: drop-shadow(0 0 20px rgba(201, 169, 110, 0.3));
+            transition: filter 0.8s ease, transform 0.8s ease;
+        }
+
+        .wrap:hover .logo {
+            filter: drop-shadow(0 0 35px rgba(201, 169, 110, 0.5));
+            transform: scale(1.05);
+        }
+
         .line {
             display: block;
             width: 48px;
@@ -92,6 +106,7 @@
 <body>
     <div class="wrap">
         <span class="line"></span>
+        <img src="logo.png" alt="Nava Logo" class="logo">
         <h1 class="nava">Nava Concerts</h1>
         <p class="tagline">By Invitation Only</p>
         <span class="line line--bottom"></span>
