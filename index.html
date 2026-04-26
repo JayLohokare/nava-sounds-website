@@ -251,6 +251,49 @@
             margin-bottom: 3rem;
         }
 
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: #a3a3a3;
+            padding: 0.6rem 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 30px;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(201, 169, 110, 0.05);
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .events-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -639,26 +682,48 @@
     <section class="container" id="events">
         <div class="events reveal">
             <h2>Upcoming Concerts</h2>
-            <div class="events-grid">
-                <!-- San Francisco -->
-                <div class="event-card">
-                    <div class="event-city">San Francisco</div>
-                    <div class="event-status">Sounds of India</div>
-                    <a href="https://navaconcerts.ticketspice.com/sounds-of-india" target="_blank" class="event-btn">Get Tickets</a>
-                </div>
-                <!-- Seattle -->
-                <div class="event-card">
-                    <div class="event-city">Seattle</div>
-                    <div class="event-status">Planning something special...</div>
-                    <a href="#join" class="event-btn disabled">Coming Soon</a>
-                </div>
-                <!-- New York City -->
-                <div class="event-card">
-                    <div class="event-city">New York City</div>
-                    <div class="event-status">Curating our next secret location...</div>
-                    <a href="#join" class="event-btn disabled">Stay Tuned</a>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab(event, 'sf')">San Francisco</button>
+                <button class="tab-btn" onclick="switchTab(event, 'seattle')">Seattle</button>
+                <button class="tab-btn" onclick="switchTab(event, 'nyc')">New York City</button>
+            </div>
+
+            <!-- San Francisco Events -->
+            <div id="tab-sf" class="tab-pane active">
+                <div class="events-grid">
+                    <div class="event-card">
+                        <div class="event-city" style="font-size: 1.8rem;">Sounds of India</div>
+                        <div class="event-status">Tickets available</div>
+                        <a href="https://navaconcerts.ticketspice.com/sounds-of-india" target="_blank" class="event-btn">Get Tickets</a>
+                    </div>
                 </div>
             </div>
+
+            <!-- Seattle Events -->
+            <div id="tab-seattle" class="tab-pane">
+                <div class="events-grid">
+                    <div class="event-card" style="align-items: center; justify-content: center; padding: 4rem 2rem;">
+                        <div class="event-city" style="font-size: 1.5rem; color: #a3a3a3;">Planning something special...</div>
+                        <div style="margin-top: 1rem;">
+                            <a href="#join" class="event-btn disabled">Coming Soon</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NYC Events -->
+            <div id="tab-nyc" class="tab-pane">
+                <div class="events-grid">
+                    <div class="event-card" style="align-items: center; justify-content: center; padding: 4rem 2rem;">
+                        <div class="event-city" style="font-size: 1.5rem; color: #a3a3a3;">Curating our next secret location...</div>
+                        <div style="margin-top: 1rem;">
+                            <a href="#join" class="event-btn disabled">Stay Tuned</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </section>
 
@@ -691,6 +756,15 @@
 
     <!-- Scripts -->
     <script>
+        // Tab Switching
+        function switchTab(e, tabId) {
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabId).classList.add('active');
+            e.currentTarget.classList.add('active');
+        }
+
         // Menu Toggle
         function toggleMenu() {
             document.querySelector('.menu-toggle').classList.toggle('active');
