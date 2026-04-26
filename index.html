@@ -239,6 +239,87 @@
             font-size: 0.95rem;
         }
 
+        /* Events Section */
+        .events {
+            padding: 2rem 0 6rem;
+        }
+
+        .events h2 {
+            text-align: center;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--gold);
+            margin-bottom: 3rem;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .event-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 2.5rem 2rem;
+            border-radius: 4px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            transition: transform 0.4s ease, border-color 0.4s ease, background 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(201, 169, 110, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .event-card .event-city {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .event-card .event-status {
+            font-weight: 300;
+            color: #a3a3a3;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+
+        .event-btn {
+            display: inline-block;
+            background: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 0.8rem 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .event-btn:hover {
+            background: var(--gold);
+            color: var(--bg);
+        }
+
+        .event-btn.disabled {
+            border-color: var(--glass-border);
+            color: #666;
+            pointer-events: none;
+        }
+
         /* CTA Section */
         .cta {
             text-align: center;
@@ -504,6 +585,7 @@
         <ul>
             <li><a href="#home" onclick="toggleMenu()">Home</a></li>
             <li><a href="#about" onclick="toggleMenu()">The Experience</a></li>
+            <li><a href="#events" onclick="toggleMenu()">Events</a></li>
             <li><a href="#join" onclick="toggleMenu()">Join the List</a></li>
         </ul>
         <div style="margin-top: auto; border-top: 1px solid var(--glass-border); padding-top: 2rem;">
@@ -549,6 +631,33 @@
                 <div class="icon">⟡</div>
                 <h3>Community</h3>
                 <p>Connect with a mindful audience of fellow music lovers. Experience performances in a space where art is truly respected and shared.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="container" id="events">
+        <div class="events reveal">
+            <h2>Upcoming Concerts</h2>
+            <div class="events-grid">
+                <!-- San Francisco -->
+                <div class="event-card">
+                    <div class="event-city">San Francisco</div>
+                    <div class="event-status">Sounds of India</div>
+                    <a href="https://navaconcerts.ticketspice.com/sounds-of-india" target="_blank" class="event-btn">Get Tickets</a>
+                </div>
+                <!-- Seattle -->
+                <div class="event-card">
+                    <div class="event-city">Seattle</div>
+                    <div class="event-status">Planning something special...</div>
+                    <a href="#join" class="event-btn disabled">Coming Soon</a>
+                </div>
+                <!-- New York City -->
+                <div class="event-card">
+                    <div class="event-city">New York City</div>
+                    <div class="event-status">Curating our next secret location...</div>
+                    <a href="#join" class="event-btn disabled">Stay Tuned</a>
+                </div>
             </div>
         </div>
     </section>
