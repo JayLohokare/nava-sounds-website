@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nava — Concerts</title>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
     <style>
         *, *::before, *::after {
             margin: 0;
@@ -19,88 +22,356 @@
             --gold-dim: rgba(201, 169, 110, 0.35);
             --gold-bright: #e0c68a;
             --bg: #0a0a0a;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(201, 169, 110, 0.15);
         }
 
-        html, body {
-            height: 100%;
-            overflow: hidden;
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            background: var(--bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        .wrap {
+        h1, h2, h3, h4, h5, h6, .serif {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+        }
+
+        /* Ambient Background */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, rgba(201, 169, 110, 0.05) 0%, transparent 60%);
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(rgba(201, 169, 110, 0.3) 1px, transparent 1px),
+                radial-gradient(rgba(201, 169, 110, 0.2) 1px, transparent 1px);
+            background-size: 100px 100px, 150px 150px;
+            background-position: 0 0, 50px 50px;
+            opacity: 0.5;
+            animation: drift 60s linear infinite;
+        }
+
+        @keyframes drift {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-150px); }
+        }
+
+        /* Layout */
+        .container {
             position: relative;
             z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 8rem 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            padding: 2rem;
+            padding: 0;
+        }
+
+        .logo-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .logo {
-            width: clamp(80px, 15vw, 180px);
+            width: clamp(80px, 15vw, 150px);
             height: auto;
-            margin: 0 auto 1.5rem;
-            display: block;
+            margin-bottom: 2rem;
             filter: drop-shadow(0 0 20px rgba(201, 169, 110, 0.3));
             transition: filter 0.8s ease, transform 0.8s ease;
         }
 
-        .wrap:hover .logo {
+        .logo-wrap:hover .logo {
             filter: drop-shadow(0 0 35px rgba(201, 169, 110, 0.5));
             transform: scale(1.05);
         }
 
         .line {
             display: block;
-            width: 48px;
+            width: 60px;
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
-            margin: 0 auto 1.8rem;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 0 auto;
         }
 
         .nava {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 300;
-            font-size: clamp(1.8rem, 6vw, 3.8rem);
+            font-size: clamp(2rem, 6vw, 4.5rem);
             letter-spacing: 0.3em;
             text-transform: uppercase;
             color: var(--gold);
-            cursor: default;
-            user-select: none;
+            margin: 1.5rem 0;
             transition: color 0.8s ease, letter-spacing 0.8s ease, text-shadow 0.8s ease;
-            text-shadow: none;
         }
 
         .nava:hover {
             color: var(--gold-bright);
-            letter-spacing: 0.38em;
+            letter-spacing: 0.35em;
             text-shadow: 0 0 25px rgba(201, 169, 110, 0.2);
         }
 
-        .line--bottom {
-            margin: 1.8rem auto 0;
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.7;
+            animation: bounce 2s infinite ease-in-out;
+            cursor: pointer;
+            text-decoration: none;
         }
 
-        /* Hamburger Menu */
+        .scroll-indicator span {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .scroll-indicator .arrow {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, 10px); }
+        }
+
+        /* Pitch Section */
+        .pitch {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .pitch h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--gold);
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .pitch p {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: #d1d1d1;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Pillars Section */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .pillar-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 3rem 2rem;
+            border-radius: 4px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            transition: transform 0.4s ease, border-color 0.4s ease, background 0.4s ease;
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(201, 169, 110, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .pillar-card .icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .pillar-card h3 {
+            font-size: 1.5rem;
+            color: var(--gold-bright);
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+        }
+
+        .pillar-card p {
+            font-weight: 300;
+            color: #a3a3a3;
+            font-size: 0.95rem;
+        }
+
+        /* CTA Section */
+        .cta {
+            text-align: center;
+            padding: 8rem 0 10rem;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta p {
+            font-weight: 300;
+            color: #d1d1d1;
+            margin-bottom: 3rem;
+        }
+
+        .cta-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .cta-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--gold-dim);
+            padding: 1rem 0;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .cta-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .cta-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .cta-btn {
+            background: var(--gold);
+            color: var(--bg);
+            border: none;
+            padding: 1rem 2rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            background: var(--gold-bright);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--gold);
+            font-size: 1.5rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: #a3a3a3;
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .copyright {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.2);
+            font-weight: 300;
+        }
+
+        /* Navigation Menu */
         .menu-toggle {
             position: fixed;
-            top: 1.5rem;
-            left: 1.5rem;
+            top: 2rem;
+            right: 2rem;
             z-index: 1000;
             background: none;
             border: none;
             cursor: pointer;
             padding: 0.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .hamburger {
             display: block;
-            width: 28px;
-            height: 2px;
+            width: 30px;
+            height: 1px;
             background: var(--gold);
             position: relative;
             transition: background 0.3s ease;
@@ -110,51 +381,42 @@
         .hamburger::after {
             content: '';
             position: absolute;
-            width: 28px;
-            height: 2px;
+            width: 30px;
+            height: 1px;
             background: var(--gold);
             left: 0;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .hamburger::before {
-            top: -8px;
-        }
+        .hamburger::before { top: -8px; }
+        .hamburger::after { top: 8px; }
 
-        .hamburger::after {
-            top: 8px;
-        }
-
-        .menu-toggle.active .hamburger {
-            background: transparent;
-        }
-
+        .menu-toggle.active .hamburger { background: transparent; }
         .menu-toggle.active .hamburger::before {
             transform: rotate(45deg);
             top: 0;
         }
-
         .menu-toggle.active .hamburger::after {
             transform: rotate(-45deg);
             top: 0;
         }
 
-        /* Menu Panel */
         .menu-panel {
             position: fixed;
             top: 0;
-            left: 0;
+            right: 0;
             height: 100vh;
-            width: 280px;
+            width: 100%;
+            max-width: 400px;
             background: rgba(10, 10, 10, 0.98);
-            border-right: 1px solid var(--gold-dim);
-            padding: 5rem 2rem 3rem;
-            transform: translateX(-100%);
-            transition: transform 0.4s ease;
+            border-left: 1px solid var(--glass-border);
+            padding: 6rem 3rem 3rem;
+            transform: translateX(100%);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 999;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            backdrop-filter: blur(20px);
         }
 
         .menu-panel.active {
@@ -165,95 +427,200 @@
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
+            gap: 2rem;
         }
 
         .menu-panel a {
             font-family: 'Cormorant Garamond', serif;
-            font-weight: 300;
-            font-size: 1.1rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--gold);
+            font-size: 2rem;
+            letter-spacing: 0.1em;
+            color: #fff;
             text-decoration: none;
-            opacity: 0.6;
-            transition: opacity 0.3s ease, letter-spacing 0.3s ease;
+            transition: color 0.3s ease, padding-left 0.3s ease;
+            display: block;
         }
 
         .menu-panel a:hover {
-            opacity: 1;
-            letter-spacing: 0.2em;
-        }
-
-        .menu-footer {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--gold-dim);
-        }
-
-        .menu-footer span {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 300;
-            font-size: 0.75rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
             color: var(--gold);
-            opacity: 0.4;
+            padding-left: 10px;
         }
 
-        /* Overlay */
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s ease;
             z-index: 998;
+            backdrop-filter: blur(5px);
         }
 
         .overlay.active {
             opacity: 1;
             pointer-events: auto;
         }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .pillars {
+                grid-template-columns: 1fr;
+            }
+            .menu-toggle {
+                top: 1.5rem;
+                right: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="wrap">
-        <span class="line"></span>
-        <img src="logo.png" alt="Nava Logo" class="logo">
-        <h1 class="nava">Nava Concerts</h1>
-        <span class="line line--bottom"></span>
+
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+        <div class="particles"></div>
     </div>
 
-    <!-- Hamburger Toggle -->
-    <button class="menu-toggle" onclick="toggleMenu()">
+    <!-- Navigation -->
+    <button class="menu-toggle" aria-label="Toggle Menu" onclick="toggleMenu()">
         <span class="hamburger"></span>
     </button>
 
-    <!-- Menu Panel -->
     <nav class="menu-panel">
         <ul>
-            <li><a href="#events" onclick="toggleMenu()">Events</a></li>
-            <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
+            <li><a href="#home" onclick="toggleMenu()">Home</a></li>
+            <li><a href="#about" onclick="toggleMenu()">The Experience</a></li>
+            <li><a href="#join" onclick="toggleMenu()">Join the List</a></li>
         </ul>
-        <div class="menu-footer">
-            <span>Nava Sounds LLC</span>
+        <div style="margin-top: auto; border-top: 1px solid var(--glass-border); padding-top: 2rem;">
+            <p style="color: var(--gold); font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; letter-spacing: 0.1em; text-transform: uppercase;">Nava Sounds</p>
+            <p style="color: rgba(255,255,255,0.3); font-size: 0.8rem; margin-top: 0.5rem; font-weight: 300;">Elevating live music.</p>
         </div>
     </nav>
-
-    <!-- Overlay -->
     <div class="overlay" onclick="toggleMenu()"></div>
 
+    <!-- Hero Section -->
+    <section class="hero container" id="home">
+        <div class="logo-wrap reveal">
+            <div class="line"></div>
+            <h1 class="nava">Nava Concerts</h1>
+            <div class="line"></div>
+        </div>
+        <a href="#about" class="scroll-indicator">
+            <span>Discover</span>
+            <div class="arrow"></div>
+        </a>
+    </section>
+
+    <!-- Pitch Section -->
+    <section class="container" id="about">
+        <div class="pitch reveal">
+            <h2>Intimate Live Music in<br><span style="font-style: italic;">Extraordinary Spaces</span></h2>
+            <p>Experience the magic of live performance like never before. We bring together world-class artists and passionate listeners in the city's most unique, hidden venues.</p>
+            <p>Away from the noise of crowded arenas and typical club settings, Nava Concerts are a return to the essence of music. It's more than just a concert—it's a community united by a love for pure, unadulterated sound.</p>
+        </div>
+
+        <div class="pillars">
+            <div class="pillar-card reveal" style="transition-delay: 0.1s;">
+                <div class="icon">✧</div>
+                <h3>Quality Music</h3>
+                <p>Meticulously curated performances by exceptional, hand-picked artists spanning various genres, ensuring every note resonates deeply.</p>
+            </div>
+            <div class="pillar-card reveal" style="transition-delay: 0.2s;">
+                <div class="icon">✦</div>
+                <h3>Unique Locations</h3>
+                <p>From historic libraries to stunning rooftops, our secret venues are chosen for their acoustic warmth and captivating atmosphere.</p>
+            </div>
+            <div class="pillar-card reveal" style="transition-delay: 0.3s;">
+                <div class="icon">⟡</div>
+                <h3>Community</h3>
+                <p>Connect with a mindful audience of fellow music lovers. Experience performances in a space where art is truly respected and shared.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="container" id="join">
+        <div class="cta reveal">
+            <h2>Be the First to Know</h2>
+            <p>Our intimate shows have extremely limited capacity. Join our waitlist to receive invitations to upcoming secret performances before they are announced to the public.</p>
+            
+            <form class="cta-form" onsubmit="event.preventDefault(); alert('Thank you for joining the list! We will be in touch soon.');">
+                <input type="text" class="cta-input" placeholder="Your Name" required>
+                <input type="email" class="cta-input" placeholder="Your Email Address" required>
+                <button type="submit" class="cta-btn">Request Invitation</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">Nava Sounds</div>
+            <ul class="footer-links">
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Terms</a></li>
+            </ul>
+            <p class="copyright">&copy; 2026 Nava Sounds LLC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
     <script>
+        // Menu Toggle
         function toggleMenu() {
             document.querySelector('.menu-toggle').classList.toggle('active');
             document.querySelector('.menu-panel').classList.toggle('active');
             document.querySelector('.overlay').classList.toggle('active');
         }
+
+        // Scroll Reveal Animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Optional: Stop observing once revealed
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.15, // Trigger when 15% of element is visible
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            reveals.forEach(reveal => {
+                revealObserver.observe(reveal);
+            });
+            
+            // Trigger immediately for elements already in viewport on load
+            setTimeout(() => {
+                reveals.forEach(reveal => {
+                    const rect = reveal.getBoundingClientRect();
+                    if(rect.top < window.innerHeight) {
+                        reveal.classList.add('active');
+                    }
+                });
+            }, 100);
+        });
     </script>
 </body>
 </html>
