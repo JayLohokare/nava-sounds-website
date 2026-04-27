@@ -55,24 +55,25 @@
             background: radial-gradient(circle at 50% 50%, rgba(201, 169, 110, 0.05) 0%, transparent 60%);
         }
 
-        .particles {
+        #particle-canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
-                radial-gradient(rgba(201, 169, 110, 0.3) 1px, transparent 1px),
-                radial-gradient(rgba(201, 169, 110, 0.2) 1px, transparent 1px);
-            background-size: 100px 100px, 150px 150px;
-            background-position: 0 0, 50px 50px;
             opacity: 0.5;
-            animation: drift 60s linear infinite;
         }
 
-        @keyframes drift {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-150px); }
+        .spotlight {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(circle 600px at var(--x, 50vw) var(--y, 50vh), rgba(201, 169, 110, 0.08), transparent 80%);
+            will-change: background;
         }
 
         /* Layout */
@@ -621,8 +622,9 @@
 
     <!-- Ambient Background -->
     <div class="ambient-bg">
-        <div class="particles"></div>
+        <canvas id="particle-canvas"></canvas>
     </div>
+    <div class="spotlight"></div>
 
     <!-- Navigation -->
     <button class="menu-toggle" aria-label="Toggle Menu" onclick="toggleMenu()">
@@ -751,9 +753,9 @@
         <div class="container">
             <div class="footer-logo">Nava Sounds</div>
             <ul class="footer-links">
-                <li><a href="#">Instagram</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">Terms</a></li>
+                <li><a href="https://www.instagram.com/navaconcerts/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                <li><a href="mailto:jay@navasounds.com">Contact</a></li>
+
             </ul>
             <p class="copyright">&copy; 2026 Nava Sounds LLC. All rights reserved.</p>
         </div>
@@ -823,6 +825,155 @@
                 });
             }, 100);
         });
+
+        // Interactive Mouse Spotlight
+        const spotlight = document.querySelector('.spotlight');
+        document.addEventListener('mousemove', (e) => {
+            if (spotlight) {
+                spotlight.style.setProperty('--x', e.clientX + 'px');
+                spotlight.style.setProperty('--y', e.clientY + 'px');
+            }
+        });
+
+        // 3D Tilt Effect on Hero Text
+        const tiltElement = document.querySelector('.logo-wrap');
+        document.addEventListener('mousemove', (e) => {
+            if(!tiltElement) return;
+            const rect = tiltElement.getBoundingClientRect();
+            // Only tilt if mouse is in the upper half of the page to avoid weirdness
+            if(e.clientY > window.innerHeight) return;
+            
+            const x = e.clientX - (rect.left + rect.width / 2);
+            const y = e.clientY - (rect.top + rect.height / 2);
+            
+            const multiplier = 0.03;
+            tiltElement.style.transform = `perspective(1000px) rotateX(${-y * multiplier}deg) rotateY(${x * multiplier}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
+        
+        document.addEventListener('mouseleave', () => {
+            if(tiltElement) {
+                tiltElement.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                tiltElement.style.transition = 'transform 0.5s ease';
+            }
+        });
+        
+        if(tiltElement) {
+            tiltElement.addEventListener('mouseenter', () => {
+                tiltElement.style.transition = 'none';
+            });
+        }
+
+        // Magnetic Hover Buttons
+        const magnetics = document.querySelectorAll('.menu-toggle, .cta-btn, .scroll-indicator');
+        magnetics.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                // If it's the scroll indicator, preserve its X centering
+                if (btn.classList.contains('scroll-indicator')) {
+                    btn.style.transform = `translateX(-50%) translate(${x * 0.3}px, ${y * 0.3}px)`;
+                } else {
+                    btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+                }
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transition = 'transform 0.3s ease';
+                if (btn.classList.contains('scroll-indicator')) {
+                    btn.style.transform = `translateX(-50%)`;
+                } else {
+                    btn.style.transform = `translate(0px, 0px)`;
+                }
+                setTimeout(() => { btn.style.transition = ''; }, 300);
+            });
+        });
+
+        // Interactive Canvas Grid Particles
+        const canvas = document.getElementById('particle-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particlesArray = [];
+            
+            function initCanvas() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                particlesArray = [];
+                
+                const spacing = 100;
+                for(let x = 0; x < width + spacing; x += spacing) {
+                    for(let y = 0; y < height + spacing; y += spacing) {
+                        particlesArray.push({
+                            x: x, 
+                            y: y, 
+                            baseX: x, 
+                            baseY: y,
+                            size: 1.5
+                        });
+                    }
+                }
+            }
+            
+            let mouse = { x: null, y: null, radius: 150 };
+            
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+            window.addEventListener('mouseout', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+            window.addEventListener('resize', initCanvas);
+            
+            function animateParticles() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.fillStyle = 'rgba(201, 169, 110, 0.4)';
+                
+                for(let i=0; i<particlesArray.length; i++){
+                    let p = particlesArray[i];
+                    
+                    if(mouse.x != null) {
+                        let dx = mouse.x - p.x;
+                        let dy = mouse.y - p.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        let forceDirectionX = dx / distance;
+                        let forceDirectionY = dy / distance;
+                        
+                        if(distance < mouse.radius) {
+                            const maxDistance = mouse.radius;
+                            const force = (maxDistance - distance) / maxDistance;
+                            const directionX = forceDirectionX * force * 5;
+                            const directionY = forceDirectionY * force * 5;
+                            
+                            p.x -= directionX;
+                            p.y -= directionY;
+                        } else {
+                            if(p.x !== p.baseX) p.x -= (p.x - p.baseX) * 0.05;
+                            if(p.y !== p.baseY) p.y -= (p.y - p.baseY) * 0.05;
+                        }
+                    } else {
+                        if(p.x !== p.baseX) p.x -= (p.x - p.baseX) * 0.05;
+                        if(p.y !== p.baseY) p.y -= (p.y - p.baseY) * 0.05;
+                    }
+                    
+                    p.baseY -= 0.5;
+                    if(p.baseY < -50) {
+                        p.baseY = height + 50;
+                        p.y = p.baseY;
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                requestAnimationFrame(animateParticles);
+            }
+            
+            initCanvas();
+            animateParticles();
+        }
     </script>
 </body>
 </html>
